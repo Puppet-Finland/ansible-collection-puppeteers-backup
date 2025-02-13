@@ -1,0 +1,11 @@
+---
+puppeteers_backup_rsnapshot_prometheus_metrics_state: present
+puppeteers_backup_rsnapshot_prometheus_metrics_latest_backup_directory: "/var/backups/rsnapshot/daily.0"
+puppeteers_backup_rsnapshot_prometheus_metrics_marker_name: ".rsnapshot-marker"
+puppeteers_backup_rsnapshot_prometheus_metrics_max_backup_age_days: 2
+puppeteers_backup_rsnapshot_prometheus_metrics_max_depth: 3
+puppeteers_backup_rsnapshot_prometheus_metrics_hour: 2
+puppeteers_backup_rsnapshot_prometheus_metrics_minute: 55
+puppeteers_backup_rsnapshot_prometheus_metrics_weekday: "*"
+puppeteers_backup_rsnapshot_prometheus_metrics_metrics_file: "/var/lib/node_exporter/textfile_collector/rsnapshot.prom"
+puppeteers_backup_rsnapshot_prometheus_metrics_script: "/usr/local/bin/create-rsnapshot-prometheus-metrics.sh"

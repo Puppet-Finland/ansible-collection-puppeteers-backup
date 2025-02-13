@@ -1,0 +1,32 @@
+---
+- name: Validate parameters
+  ansible.builtin.assert:
+    that:
+      - puppeteers_backup_rsnapshot_prometheus_metrics_state is match ('^(present|absent)$')
+      - puppeteers_backup_rsnapshot_prometheus_metrics_latest_backup_directory is string
+      - puppeteers_backup_rsnapshot_prometheus_metrics_marker_name is string
+      - puppeteers_backup_rsnapshot_prometheus_metrics_script is string
+      - puppeteers_backup_rsnapshot_prometheus_metrics_max_backup_age_days is number
+      - puppeteers_backup_rsnapshot_prometheus_metrics_max_depth is number
+      - puppeteers_backup_rsnapshot_prometheus_metrics_hour is number or puppeteers_backup_rsnapshot_prometheus_metrics_hour is string
+      - puppeteers_backup_rsnapshot_prometheus_metrics_minute is number or puppeteers_backup_rsnapshot_prometheus_metrics_minute is string
+      - puppeteers_backup_rsnapshot_prometheus_metrics_weekday is number or puppeteers_backup_rsnapshot_prometheus_metrics_weekday is string
+      - puppeteers_backup_rsnapshot_prometheus_metrics_metrics_file is string
+
+- name: Create rsnapshot metrics gathering script
+  ansible.builtin.template:
+    src: "create-rsnapshot-prometheus-metrics.sh.j2"
+    dest: "{{ puppeteers_backup_rsnapshot_prometheus_metrics_script }}"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Add rsnapshot metrics gathering cronjob
+  ansible.builtin.cron:
+    name: "create rsnapshot prometheus metrics"
+    job: "{{ puppeteers_backup_rsnapshot_prometheus_metrics_script }} -b {{ puppeteers_backup_rsnapshot_prometheus_metrics_latest_backup_directory }} -m {{ puppeteers_backup_rsnapshot_prometheus_metrics_marker_name }} -a {{ puppeteers_backup_rsnapshot_prometheus_metrics_max_backup_age_days }} -d {{ puppeteers_backup_rsnapshot_prometheus_metrics_max_depth }} > {{ puppeteers_backup_rsnapshot_prometheus_metrics_metrics_file }}"
+    user: root
+    hour: "{{ puppeteers_backup_rsnapshot_prometheus_metrics_hour }}"
+    minute: "{{ puppeteers_backup_rsnapshot_prometheus_metrics_minute }}"
+    weekday: "{{ puppeteers_backup_rsnapshot_prometheus_metrics_weekday }}"
+    state: "{{ puppeteers_backup_rsnapshot_prometheus_metrics_state }}"
