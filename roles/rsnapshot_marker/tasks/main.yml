@@ -1,0 +1,18 @@
+---
+- name: Validate pameters
+  ansible.builtin.assert:
+    that:
+      - puppeteers_backup_rsnapshot_marker_path is string
+      - puppeteers_backup_rsnapshot_marker_hour is string or puppeteers_backup_rsnapshot_marker_hour is number
+      - puppeteers_backup_rsnapshot_marker_minute is string or puppeteers_backup_rsnapshot_marker_minute is number
+      - puppeteers_backup_rsnapshot_marker_weekday is string or puppeteers_backup_rsnapshot_marker_weekday is number
+
+- name: Add cronjob to add rsnapshot marker file
+  ansible.builtin.cron:
+    name: Update rsnapshot marker file
+    state: present
+    user: root
+    job: "/usr/bin/touch {{ puppeteers_backup_rsnapshot_marker_path }}"
+    hour: "{{ puppeteers_backup_rsnapshot_marker_hour }}"
+    minute: "{{ puppeteers_backup_rsnapshot_marker_minute }}"
+    weekday: "{{ puppeteers_backup_rsnapshot_marker_weekday }}"

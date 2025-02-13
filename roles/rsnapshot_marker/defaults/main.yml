@@ -1,0 +1,4 @@
+puppeteers_backup_rsnapshot_marker_path: /etc/.rsnapshot-marker
+puppeteers_backup_rsnapshot_marker_hour: 1
+puppeteers_backup_rsnapshot_marker_minute: 58
+puppeteers_backup_rsnapshot_marker_weekday: "*"
