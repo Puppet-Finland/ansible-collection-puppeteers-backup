@@ -1,0 +1,8 @@
+- name: Ensure config.ini file is present
+  ansible.builtin.template:
+    src: config.j2
+    dest: "{{ puppeteers_backup_git_repo_backup_install_dir }}/config.ini"
+    owner: "{{ puppeteers_backup_git_repo_backup_user }}"
+    group: "{{ puppeteers_backup_git_repo_backup_group }}"
+    mode: '0664'
+

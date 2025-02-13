@@ -1,0 +1,17 @@
+---
+puppeteers_backup_git_repo_backup_user: repobacker
+puppeteers_backup_git_repo_backup_group: repobacker
+puppeteers_backup_git_repo_backup_install_dir: /home/repobacker/repo-backup
+puppeteers_backup_git_repo_backup_ssh_dir: /home/repobacker/.ssh
+puppeteers_backup_git_repo_backup_manage_script_repo: true
+puppeteers_backup_git_repo_backup_manage_podman: true
+puppeteers_backup_git_repo_backup_manage_podman_image: true
+puppeteers_backup_git_repo_backup_manage_script_repo: true
+puppeteers_backup_git_repo_backup_manage_podman: true
+puppeteers_backup_git_repo_backup_manage_podman_image: true
+puppeteers_backup_git_repo_backup_manage_cron: true
+puppeteers_backup_git_repo_backup_cron_hour: 1
+puppeteers_backup_git_repo_backup_cron_minute: 30
+puppeteers_backup_git_repo_backup_vendor: bitbucket
+puppeteers_backup_git_repo_backup_tag: "repo-backup"
+puppeteers_backup_git_repo_backup_backups_volume: /var/backups/git-repos

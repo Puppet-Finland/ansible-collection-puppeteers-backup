@@ -1,0 +1,8 @@
+---
+- name: Install Podman and Git
+  ansible.builtin.package:
+    name:
+      - podman
+      - git
+    state: present
+  when: puppeteers_backup_git_repo_backup_manage_podman

@@ -1,0 +1,54 @@
+---
+- name: Validate parameters
+  ansible.builtin.assert:
+    that:
+      # The following two variables typically come from Vault and can't be validated normally
+      - puppeteers_backup_git_repo_backup_github_key is defined
+      - puppeteers_backup_git_repo_backup_bitbucket_key is defined
+      - puppeteers_backup_git_repo_backup_script_repo is string
+      - puppeteers_backup_git_repo_backup_config is not string and puppeteers_backup_git_repo_backup_config is iterable and puppeteers_backup_git_repo_backup_config is mapping
+      - puppeteers_backup_git_repo_backup_user is string or puppeteers_backup_git_repo_backup_user == None
+      - puppeteers_backup_git_repo_backup_group is string or puppeteers_backup_git_repo_backup_group == None
+      - puppeteers_backup_git_repo_backup_install_dir is string or puppeteers_backup_git_repo_backup_install_dir == None
+      - puppeteers_backup_git_repo_backup_backups_volume is string or puppeteers_backup_git_repo_backup_backups_volume == None
+      - puppeteers_backup_git_repo_backup_manage_script_repo is boolean or puppeteers_backup_git_repo_backup_manage_script_repo == None
+      - puppeteers_backup_git_repo_backup_manage_podman is boolean or puppeteers_backup_git_repo_backup_manage_podman == None
+      - puppeteers_backup_git_repo_backup_manage_podman_image is boolean or puppeteers_backup_git_repo_backup_manage_podman_image == None
+      - puppeteers_backup_git_repo_backup_manage_cron is boolean or puppeteers_backup_git_repo_backup_manage_cron == None
+      - puppeteers_backup_git_repo_backup_cron_hour is integer or puppeteers_backup_git_repo_backup_cron_hour == None
+      - puppeteers_backup_git_repo_backup_cron_minute is integer or puppeteers_backup_git_repo_backup_cron_minute == None
+      - puppeteers_backup_git_repo_backup_vendor is string or puppeteers_backup_git_repo_backup_vendor == None
+      - puppeteers_backup_git_repo_backup_ssh_keys is not string and puppeteers_backup_git_repo_backup_ssh_keys is iterable and puppeteers_backup_git_repo_backup_ssh_keys is mapping
+      - puppeteers_backup_git_repo_backup_tag is string or puppeteers_backup_git_repo_backup_tag == None
+
+- name: Check for required conditions if manage_podman_image is true
+  ansible.builtin.assert:
+    that:
+      - puppeteers_backup_git_repo_backup_ssh_keys is defined
+      - puppeteers_backup_git_repo_backup_config is defined
+    fail_msg: "Managing podman image requires ssh_keys and config to be set."
+  when: puppeteers_backup_git_repo_backup_manage_podman_image | bool
+
+- name: Check for required conditions if manage_cron is true
+  ansible.builtin.assert:
+    that:
+      - puppeteers_backup_git_repo_backup_backups_volume is defined
+    fail_msg: "Managing cron requires backups_volume to be set."
+  when: puppeteers_backup_git_repo_backup_manage_cron | bool
+
+- name: Ensure all prerequisites are available
+  ansible.builtin.import_tasks: prerequisites.yml
+
+- name: Manage user and its SSH settings
+  ansible.builtin.import_tasks: user.yml
+
+- name: Manage backup config
+  ansible.builtin.import_tasks: config.yml
+
+- name: Manage Git repository
+  ansible.builtin.import_tasks: repo.yml
+  when: puppeteers_backup_git_repo_backup_manage_script_repo
+
+- name: Manage cronjob
+  ansible.builtin.import_tasks: cron.yml
+  when: puppeteers_backup_git_repo_backup_manage_cron

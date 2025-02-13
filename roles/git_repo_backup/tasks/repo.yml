@@ -1,0 +1,28 @@
+- name: Ensure git repository is present
+  ansible.builtin.git:
+    repo: "{{ puppeteers_backup_git_repo_backup_script_repo }}"
+    dest: "{{ puppeteers_backup_git_repo_backup_install_dir }}"
+    version: "HEAD"
+    clone: yes
+    update: yes
+    accept_hostkey: yes
+    force: yes
+  become: yes
+  become_user: "{{ puppeteers_backup_git_repo_backup_user }}"
+
+- name: Ensure SSH private key directory for Podman container is available
+  ansible.builtin.file:
+    path: "{{ puppeteers_backup_git_repo_backup_install_dir }}/keys"
+    state: directory
+    mode: '0700'
+    owner: "{{ puppeteers_backup_git_repo_backup_user }}"
+    group: "{{ puppeteers_backup_git_repo_backup_group }}"
+
+- name: Ensure that SSH private keys for Podman container are available
+  ansible.builtin.copy:
+    content: "{{ item.value }}"
+    dest: "{{ puppeteers_backup_git_repo_backup_install_dir }}/keys/{{ item.key }}"
+    owner: "{{ puppeteers_backup_git_repo_backup_user }}"
+    group: "{{ puppeteers_backup_git_repo_backup_group }}"
+    mode: '0600'
+  loop: "{{ puppeteers_backup_git_repo_backup_ssh_keys | dict2items}}"

@@ -1,0 +1,8 @@
+- name: Schedule git-repo-backup cron job
+  ansible.builtin.cron:
+    name: "git-repo-backup"
+    job: "cd {{ puppeteers_backup_git_repo_backup_install_dir }} && /usr/bin/podman build . -t {{ puppeteers_backup_git_repo_backup_tag }} && /usr/bin/podman run -v {{ puppeteers_backup_git_repo_backup_backups_volume }}:{{ puppeteers_backup_git_repo_backup_backups_volume }}:Z -v {{ puppeteers_backup_git_repo_backup_install_dir }}/keys:/app/keys:Z -v {{ puppeteers_backup_git_repo_backup_install_dir }}/config.ini:/app/config.ini:Z {{ puppeteers_backup_git_repo_backup_tag }} -b {{ puppeteers_backup_git_repo_backup_backups_volume }}/{{ puppeteers_backup_git_repo_backup_vendor }}"
+    user: "{{ puppeteers_backup_git_repo_backup_user }}"
+    hour: "{{ puppeteers_backup_git_repo_backup_cron_hour }}"
+    minute: "{{ puppeteers_backup_git_repo_backup_cron_minute }}"
+    state: present

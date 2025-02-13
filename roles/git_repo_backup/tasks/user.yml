@@ -1,0 +1,57 @@
+---
+- name: Ensure user exists
+  ansible.builtin.user:
+    name: "{{ puppeteers_backup_git_repo_backup_user }}"
+    shell: "/bin/bash"
+    home: "/home/{{ puppeteers_backup_git_repo_backup_user }}"
+    createhome: yes
+    state: present
+
+- name: Ensure group exists
+  ansible.builtin.group:
+    name: "{{ puppeteers_backup_git_repo_backup_group }}"
+    state: present
+
+- name: Ensure installation directory exists
+  ansible.builtin.file:
+    path: "{{ puppeteers_backup_git_repo_backup_install_dir }}"
+    state: directory
+    mode: '0770'
+    owner: "{{ puppeteers_backup_git_repo_backup_user }}"
+    group: "{{ puppeteers_backup_git_repo_backup_group }}"
+
+- name: Ensure SSH directory exists
+  ansible.builtin.file:
+    path: "{{ puppeteers_backup_git_repo_backup_ssh_dir }}"
+    state: directory
+    owner: "{{ puppeteers_backup_git_repo_backup_user }}"
+    group: "{{ puppeteers_backup_git_repo_backup_group }}"
+    mode: '0700'
+
+- name: Ensure known_hosts file exists
+  ansible.builtin.file:
+    path: "{{ puppeteers_backup_git_repo_backup_ssh_dir }}/known_hosts"
+    state: touch
+    owner: "{{ puppeteers_backup_git_repo_backup_user }}"
+    group: "{{ puppeteers_backup_git_repo_backup_group }}"
+    mode: '0644'
+
+- name: Ensure backups volume directory exists
+  ansible.builtin.file:
+    path: "{{ puppeteers_backup_git_repo_backup_backups_volume }}"
+    state: directory
+    mode: '0770'
+    owner: "{{ puppeteers_backup_git_repo_backup_user }}"
+    group: "{{ puppeteers_backup_git_repo_backup_group }}"
+
+- name: Add github.com key to known_hosts
+  ansible.builtin.lineinfile:
+    path: "{{ puppeteers_backup_git_repo_backup_ssh_dir }}/known_hosts"
+    line: "{{ puppeteers_backup_git_repo_backup_github_key }}"
+    state: present
+
+- name: Add bitbucket.org key to known_hosts
+  ansible.builtin.lineinfile:
+    path: "{{ puppeteers_backup_git_repo_backup_ssh_dir }}/known_hosts"
+    line: "{{ puppeteers_backup_git_repo_backup_bitbucket_key }}"
+    state: present
