@@ -1,0 +1,15 @@
+---
+- name: Validate parameters
+  ansible.builtin.assert:
+    that:
+      - puppeteers_backup_rsnapshot_allow_state is match ('^(present|absent)$')
+      - puppeteers_backup_rsnapshot_allow_host is string
+      - puppeteers_backup_rsnapshot_allow_key is string
+      - puppeteers_backup_rsnapshot_allow_user is string
+
+- name: add rsnapshot server private key
+  ansible.posix.authorized_key:
+    state: "{{ puppeteers_backup_rsnapshot_allow_state }}"
+    user: "{{ puppeteers_backup_rsnapshot_allow_user }}"
+    key: "{{ puppeteers_backup_rsnapshot_allow_key }}"
+    key_options: "from=\"{{ puppeteers_backup_rsnapshot_allow_host }}\""

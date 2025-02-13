@@ -1,0 +1,3 @@
+---
+puppeteers_backup_rsnapshot_allow_state: present
+puppeteers_backup_rsnapshot_allow_user: root

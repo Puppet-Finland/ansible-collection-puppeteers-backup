@@ -37,6 +37,23 @@ puppeteers_backup_git_repo_backup_ssh_keys:
 In most case all the other parameters can be left at their defaults values (see
 [roles/git_repo_backup/defaults/main.yml](roles/git_repo_backup/defaults/main.yml)).
 
+## rsnapshot_allow
+
+This role adds an SSH authorized key to allow rsnapshot server to SSH in to its
+target nodes. By default the key is installed for the root user. To reduce the
+security impact you must define *puppeteers_backup_rsnapshot_allow_host*, which
+defines the IP from which rsnapshot server connects from. Moreover, you may
+install the to some other, less privileged user by setting
+*puppeteers_backup_rsnapshot_allow_user*.
+
+In general you only define two variables:
+
+* puppeteers_backup_rsnapshot_allow_host (e.g. *10.251.99.4*)
+* puppeteers_backup_rsnapshot_allow_key (public SSH key, e.g. ssh-ed25519 AAAA...)
+
+For details see
+[roles/rsnapshot_allow/defaults/main.yml](roles/rsnapshot_allow/defaults/main.yml).
+
 ## rsnapshot_marker
 
 This is a simple role that updates a file on the host. That file, by default
