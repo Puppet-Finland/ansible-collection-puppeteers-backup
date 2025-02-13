@@ -8,9 +8,10 @@ This Ansible Collection contains code for managing backup configurations.
 
 This Ansible role configures
 [git-repo-backup](https://github.com/Puppet-Finland/git-repo-backup) tool. It
-can be used to back up arbitrary Git repositories via SSH. It creates a
-separate user for the backup job and runs it in a Podman container. The role
-has been tested on Rocky Linux 9.
+can be used to back up arbitrary Git repositories via SSH. Right now Bitbucket
+and GitHub are explicitly supported by having their SSH host keys in the role
+defaults. This role creates a separate user for the backup job and runs it in
+a Podman container. The role has been tested on Rocky Linux 9.
 
 Several parameters are required to use this role:
 
@@ -28,8 +29,6 @@ puppeteers_backup_git_repo_backup_config:
     ssh_key: "my_second_key"
 
 puppeteers_backup_git_repo_backup_script_repo: 'https://github.com/Puppet-Finland/git-repo-backup.git'
-puppeteers_backup_git_repo_backup_github_key: <public SSH key for GitHub for known_hosts>
-puppeteers_backup_git_repo_backup_bitbucket_key: <public SSH key for Bitbucket for known_hosts>
 puppeteers_backup_git_repo_backup_ssh_keys:
     my_first_key: <a SSH private key to use to back up Git repositories for org1>
     my_other_key: <a SSH private key to use to back up Git repositories for org2>

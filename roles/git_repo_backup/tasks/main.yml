@@ -2,9 +2,8 @@
 - name: Validate parameters
   ansible.builtin.assert:
     that:
-      # The following two variables typically come from Vault and can't be validated normally
-      - puppeteers_backup_git_repo_backup_github_key is defined
-      - puppeteers_backup_git_repo_backup_bitbucket_key is defined
+      - puppeteers_backup_git_repo_backup_github_key is string
+      - puppeteers_backup_git_repo_backup_bitbucket_key is string
       - puppeteers_backup_git_repo_backup_script_repo is string
       - puppeteers_backup_git_repo_backup_config is not string and puppeteers_backup_git_repo_backup_config is iterable and puppeteers_backup_git_repo_backup_config is mapping
       - puppeteers_backup_git_repo_backup_user is string or puppeteers_backup_git_repo_backup_user == None
