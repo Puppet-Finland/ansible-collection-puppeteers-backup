@@ -7,5 +7,5 @@ puppeteers_backup_rsnapshot_prometheus_metrics_max_depth: 3
 puppeteers_backup_rsnapshot_prometheus_metrics_hour: 2
 puppeteers_backup_rsnapshot_prometheus_metrics_minute: 55
 puppeteers_backup_rsnapshot_prometheus_metrics_weekday: "*"
-puppeteers_backup_rsnapshot_prometheus_metrics_metrics_file: "/var/lib/node_exporter/textfile_collector/rsnapshot.prom"
+puppeteers_backup_rsnapshot_prometheus_metrics_metrics_file: "/var/lib/node_exporter/rsnapshot.prom"
 puppeteers_backup_rsnapshot_prometheus_metrics_script: "/usr/local/bin/create-rsnapshot-prometheus-metrics.sh"
