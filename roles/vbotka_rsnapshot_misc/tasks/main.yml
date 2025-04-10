@@ -1,0 +1,41 @@
+---
+# rsnapshot.conf handling assumes we are using Red Hat and vbotka.rsnapshot
+- name: Remove sample rsnapshot.conf
+  ansible.builtin.file:
+    path: /etc/rsnapshot.conf
+    state: absent
+
+- name: Add rsnapshot.conf symbolic link
+  ansible.builtin.file:
+    src: /usr/local/etc/rsnapshot.conf
+    path: /etc/rsnapshot.conf
+    state: link
+
+- name: Add PATH to cron
+  ansible.builtin.cron:
+    name: PATH
+    env: yes
+    job: /bin:/usr/bin:/usr/sbin
+
+- name: Add daily rsnapshot cronjob
+  ansible.builtin.cron:
+    name: "daily rsnapshot"
+    job: "rsnapshot daily"
+    hour: 2
+    minute: 2
+
+- name: Add weekly rsnapshot cronjob
+  ansible.builtin.cron:
+    name: "weekly rsnapshot"
+    job: "rsnapshot weekly"
+    hour: 3
+    minute: 2
+    weekday: 3
+
+- name: Add monthly rsnapshot cronjob
+  ansible.builtin.cron:
+    name: "monthly rsnapshot"
+    job: "rsnapshot monthly"
+    hour: 4
+    minute: 2
+    day: 1
