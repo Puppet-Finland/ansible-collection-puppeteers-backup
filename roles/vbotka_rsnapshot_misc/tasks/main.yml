@@ -1,15 +1,10 @@
 ---
-# rsnapshot.conf handling assumes we are using Red Hat and vbotka.rsnapshot
-- name: Remove sample rsnapshot.conf
-  ansible.builtin.file:
-    path: /etc/rsnapshot.conf
-    state: absent
-
 - name: Add rsnapshot.conf symbolic link
   ansible.builtin.file:
     src: /usr/local/etc/rsnapshot.conf
     path: /etc/rsnapshot.conf
     state: link
+    force: true
 
 - name: Add SSH private key
   ansible.builtin.copy:
