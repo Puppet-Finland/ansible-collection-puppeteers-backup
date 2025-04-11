@@ -78,3 +78,8 @@ Designed to be used after [vbotka.rsnapshot](https://github.com/Puppet-Finland/a
 
 * Links /usr/local/etc/rsnapshot.conf to /etc/rsnapshot.conf
 * Adds rsnapshot cronjobs (fixed schedule for now)
+* Adds private SSH key for rsnapshot use
+
+You need to pass the SSH private key as a parameter:
+
+* *puppeteers_backup_vbotka_rsnapshot_misc_ssh_private_key_content*

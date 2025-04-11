@@ -11,6 +11,14 @@
     path: /etc/rsnapshot.conf
     state: link
 
+- name: Add SSH private key
+  ansible.builtin.copy:
+    content: "{{ puppeteers_backup_vbotka_rsnapshot_misc_ssh_private_key_content }}"
+    dest: /root/.ssh/rsnapshot-private-ssh-key
+    owner: root
+    group: root
+    mode: '0600'
+
 - name: Add PATH to cron
   ansible.builtin.cron:
     name: PATH
