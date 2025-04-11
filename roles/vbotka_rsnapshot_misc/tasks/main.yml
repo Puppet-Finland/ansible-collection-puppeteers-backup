@@ -16,6 +16,7 @@
     src: /usr/local/etc/rsnapshot.conf
     path: /etc/rsnapshot.conf
     state: link
+    force: true
 
 - name: Add SSH private key
   ansible.builtin.copy:
