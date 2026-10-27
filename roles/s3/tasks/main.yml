@@ -56,6 +56,14 @@
     recursive: true
     state: present
 
+- name: Allow writing to the Prometheus Textfile Collector metrics directory
+  ansible.posix.acl:
+    path: "{{ puppeteers_backup_s3_textfile_collector_dir }}"
+    entry: "user:{{ puppeteers_backup_s3_system_user }}:rwx"
+    recursive: false
+    state: present
+  when: puppeteers_backup_s3_manage_prometheus_metrics
+
 - name: Ensure .aws directory exists for the backup user
   ansible.builtin.file:
     path: "/home/{{ puppeteers_backup_s3_system_user }}/.aws"

@@ -97,6 +97,16 @@ By default this role creates user "s3backup", places the backups to
 [roles/s3/defaults/main.yml](roles/s3/defaults/main.yml) and
 [roles/s3/tasks/main.yml](roles/s3/tasks/main.yml).
 
+**NOTE:** this role supports generating Prometheus metrics with textfile
+collector. To enable the feature:
+
+    puppeteers_backup_s3_manage_prometheus_metrics: true
+
+If you wish to customize the textfile collector directory:
+
+    # This is the default value
+    puppeteers_backup_s3_textfile_collector_dir: /var/lib/node_exporter
+
 ## vbotka_rsnapshot_misc
 
 Designed to be used after [vbotka.rsnapshot](https://github.com/Puppet-Finland/ansible-rsnapshot.git):

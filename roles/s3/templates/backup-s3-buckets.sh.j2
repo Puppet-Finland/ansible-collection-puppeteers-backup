@@ -3,10 +3,26 @@
 PATH=/bin:/usr/bin:/usr/local/bin
 BACKUP_PATH="{{ puppeteers_backup_s3_backup_path }}"
 
+# Add counters
+TOTAL=0
+FAILED=0
+
 cd "$BACKUP_PATH"
 
 {% for key, data in puppeteers_backup_s3_profiles.items() %}
 {% for bucket in data.buckets %}
-aws s3 sync --profile {{ key }} --quiet s3://{{ bucket}} {{ bucket }}
+aws s3 sync --profile {{ key }} --quiet s3://{{ bucket}} {{ bucket }} || FAILED=$(( $FAILED + 1 )) ; TOTAL=$(( $TOTAL +1 ))
 {% endfor %}
 {% endfor %}
+
+{% if puppeteers_backup_s3_manage_prometheus_metrics %}
+cat > {{ puppeteers_backup_s3_textfile_collector_dir }}/s3_backups.prom << EOF
+# HELP bucket_backups_total Total number of Amazon S3 bucket backup jobs
+# TYPE bucket_backups_total gauge
+bucket_backups_total{hostname="{{ ansible_facts['fqdn'] }}"} $TOTAL
+
+# HELP bucket_backups_failed Total number of Amazon S3 bucket backup jobs
+# TYPE bucket_backups_failed gauge
+bucket_backups_failed{hostname="{{ ansible_facts['fqdn'] }}"} $FAILED
+EOF
+{% endif %}

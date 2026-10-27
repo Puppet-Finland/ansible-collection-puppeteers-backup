@@ -4,3 +4,5 @@ puppeteers_backup_s3_backup_parent_path: /var/backups/local
 puppeteers_backup_s3_backup_path: /var/backups/local/s3
 puppeteers_backup_s3_cron_minute: "5"
 puppeteers_backup_s3_cron_hour: "1"
+puppeteers_backup_s3_manage_prometheus_metrics: false
+puppeteers_backup_s3_textfile_collector_dir: /var/lib/node_exporter
