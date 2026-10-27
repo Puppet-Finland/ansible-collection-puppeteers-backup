@@ -1,0 +1,111 @@
+---
+- name: Validate parameters
+  ansible.builtin.assert:
+    that:
+      - puppeteers_backup_s3_system_user is string
+      - puppeteers_backup_s3_backup_parent_path is string
+      - puppeteers_backup_s3_backup_path is string
+      - puppeteers_backup_s3_cron_minute is string
+      - puppeteers_backup_s3_cron_hour is string
+      - puppeteers_backup_s3_profiles is defined
+
+- name: Add backup user
+  ansible.builtin.user:
+    name: "{{ puppeteers_backup_s3_system_user }}"
+    comment: "S3 backup user"
+    create_home: true
+    shell: /bin/bash
+
+- name: Create backup path
+  ansible.builtin.file:
+    path: "{{ puppeteers_backup_s3_backup_path }}"
+    state: directory
+    recurse: true
+    owner: root
+    group: root
+    mode: '0750'
+
+- name: Ensure "acl" executable is present
+  ansible.builtin.package:
+    name: acl
+    state: present
+
+- name: Ensure that "aws" cli is present
+  ansible.builtin.package:
+    name: awscli2
+    state: present
+
+- name: Grant backup user rx permission to the backup parent directory
+  ansible.posix.acl:
+    path: "{{ puppeteers_backup_s3_backup_parent_path }}"
+    entry: "user:{{ puppeteers_backup_s3_system_user }}:r-x"
+    recursive: false
+    state: present
+
+- name: Ensure that default ACLs in the S3 backup directory are correct
+  ansible.posix.acl:
+    path: "{{ puppeteers_backup_s3_backup_path }}"
+    entry: "default:user:{{ puppeteers_backup_s3_system_user }}:rwx"
+    recursive: false
+    state: present
+
+- name: Grant backup user rw permissions to the S3 backup directory
+  ansible.posix.acl:
+    path: "{{ puppeteers_backup_s3_backup_path }}"
+    entry: "user:{{ puppeteers_backup_s3_system_user }}:rwx"
+    recursive: true
+    state: present
+
+- name: Ensure .aws directory exists for the backup user
+  ansible.builtin.file:
+    path: "/home/{{ puppeteers_backup_s3_system_user }}/.aws"
+    state: directory
+    owner: "{{ puppeteers_backup_s3_system_user }}"
+    group: "{{ puppeteers_backup_s3_system_user }}"
+    mode: '0700'
+
+- name: Add AWS credentials file
+  ansible.builtin.template:
+    src: credentials.j2
+    dest: "/home/{{ puppeteers_backup_s3_system_user }}/.aws/credentials"
+    owner: "{{ puppeteers_backup_s3_system_user }}"
+    group: "{{ puppeteers_backup_s3_system_user }}"
+    mode: '0600'
+  no_log: true
+
+- name: Add AWS CLI config file
+  ansible.builtin.template:
+    src: config.j2
+    dest: "/home/{{ puppeteers_backup_s3_system_user }}/.aws/config"
+    owner: "{{ puppeteers_backup_s3_system_user }}"
+    group: "{{ puppeteers_backup_s3_system_user }}"
+    mode: '0600'
+
+# Create each path component separately. This allows changing permissions
+# etc. on each. With "recurse = true" that is not possible.
+- name: Create ~/.local/bin
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ puppeteers_backup_s3_system_user }}"
+    group: "{{ puppeteers_backup_s3_system_user }}"
+    mode: '0750'
+  loop:
+    - "/home/{{ puppeteers_backup_s3_system_user }}/.local"
+    - "/home/{{ puppeteers_backup_s3_system_user }}/.local/bin"
+
+- name: Add S3 backup script
+  ansible.builtin.template:
+    src: backup-s3-buckets.sh.j2
+    dest: "/home/{{ puppeteers_backup_s3_system_user }}/.local/bin/backup-s3-buckets.sh"
+    owner: "{{ puppeteers_backup_s3_system_user }}"
+    group: "{{ puppeteers_backup_s3_system_user }}"
+    mode: '0750'
+
+- name: Add S3 backup cronjob 
+  ansible.builtin.cron:
+    name: "Back up S3 buckets"
+    user: "{{ puppeteers_backup_s3_system_user }}"
+    minute: "{{ puppeteers_backup_s3_cron_minute }}"
+    hour: "{{ puppeteers_backup_s3_cron_hour }}"
+    job: "/home/{{ puppeteers_backup_s3_system_user }}/.local/bin/backup-s3-buckets.sh"

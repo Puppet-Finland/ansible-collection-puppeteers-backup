@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+PATH=/bin:/usr/bin:/usr/local/bin
+BACKUP_PATH="{{ puppeteers_backup_s3_backup_path }}"
+
+cd "$BACKUP_PATH"
+
+{% for key, data in puppeteers_backup_s3_profiles.items() %}
+{% for bucket in data.buckets %}
+aws s3 sync --profile {{ key }} --quiet s3://{{ bucket}} {{ bucket }}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,6 @@
+puppeteers_backup_s3_system_user: s3backup
+# This should be the parent directory of the actual backup path
+puppeteers_backup_s3_backup_parent_path: /var/backups/local
+puppeteers_backup_s3_backup_path: /var/backups/local/s3
+puppeteers_backup_s3_cron_minute: "5"
+puppeteers_backup_s3_cron_hour: "1"

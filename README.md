@@ -72,6 +72,31 @@ the *rsnapshot_marker* role. Normally you don't need to define any parameters, b
 [roles/rsnapshot_prometheus_metrics/defaults/main.yml](roles/rsnapshot_prometheus_metrics/defaults/main.yml)
 for details.
 
+## s3
+
+This role configures local Amazon S3 backups and running the automatically on a
+schedule from cron . It supports backing up multiple S3 buckets with arbitrary
+IAM keypairs. At minimum you need to pass the role one parameter:
+
+    puppeteers_backup_s3_profiles:
+      foo:
+        aws_access_key_id: foo_access_key_id
+        aws_secret_access_key: foo_secret_access_key
+        buckets:
+          - 'foo_bucket_1'
+      bar:
+        aws_access_key_id: bar_access_key_id
+        aws_secret_access_key: bar_secret_access_key
+        buckets:
+          - 'bar_bucket_1'
+          - 'bar_bucket_2'
+
+By default this role creates user "s3backup", places the backups to
+"/var/backups/local/s3" and runs the backup job from cron at night. It uses
+"aws s3 sync" to keep the backups up-to-date. For details see
+[roles/s3/defaults/main.yml](roles/s3/defaults/main.yml) and
+[roles/s3/tasks/main.yml](roles/s3/tasks/main.yml).
+
 ## vbotka_rsnapshot_misc
 
 Designed to be used after [vbotka.rsnapshot](https://github.com/Puppet-Finland/ansible-rsnapshot.git):
