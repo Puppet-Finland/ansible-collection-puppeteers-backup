@@ -5,6 +5,7 @@
       - puppeteers_backup_git_repo_backup_github_key is string
       - puppeteers_backup_git_repo_backup_bitbucket_key is string
       - puppeteers_backup_git_repo_backup_script_repo is string
+      - puppeteers_backup_git_repo_prom_dir is string
       - puppeteers_backup_git_repo_backup_config is not string and puppeteers_backup_git_repo_backup_config is iterable and puppeteers_backup_git_repo_backup_config is mapping
       - puppeteers_backup_git_repo_backup_user is string or puppeteers_backup_git_repo_backup_user == None
       - puppeteers_backup_git_repo_backup_group is string or puppeteers_backup_git_repo_backup_group == None
