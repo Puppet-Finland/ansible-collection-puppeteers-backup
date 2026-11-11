@@ -1,0 +1,8 @@
+#!/bin/bash
+/usr/bin/podman run \
+	-v {{ puppeteers_backup_git_repo_backup_known_hosts_file }}:/app/known_hosts:Z \
+	-v {{ puppeteers_backup_git_repo_backup_backups_volume }}:{{ puppeteers_backup_git_repo_backup_backups_volume }}:Z \
+	-v {{ puppeteers_backup_git_repo_backup_install_dir }}/keys:/app/keys:Z \
+	-v {{ puppeteers_backup_git_repo_backup_install_dir }}/config.ini:/app/config.ini:Z \
+	-v {{ puppeteers_backup_git_repo_prom_dir }}/git_backup.prom:{{ puppeteers_backup_git_repo_prom_dir }}/git_backup.prom:Z \
+	repo-backup -b /var/backups/git-repos/bitbucket -t /var/lib/node_exporter

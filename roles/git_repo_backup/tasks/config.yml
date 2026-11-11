@@ -6,3 +6,10 @@
     group: "{{ puppeteers_backup_git_repo_backup_group }}"
     mode: '0664'
 
+- name: Ensure podman-wrapper.sh exists
+  ansible.builtin.template:
+    src: wrapper.sh.j2
+    dest: "{{ puppeteers_backup_git_repo_backup_install_dir }}/podman-wrapper.sh"
+    owner: "{{ puppeteers_backup_git_repo_backup_user }}"
+    group: "{{ puppeteers_backup_git_repo_backup_group }}"
+    mode: '0774'
